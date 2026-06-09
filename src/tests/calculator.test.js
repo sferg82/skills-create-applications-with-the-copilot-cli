@@ -1,4 +1,4 @@
-const { compute, isNumber } = require('../calculator-lib');
+const { compute, isNumber, modulo, power, squareRoot } = require('../calculator-lib');
 
 describe('Calculator library', () => {
   test('addition: 2 + 3 = 5 (symbol)', () => {
@@ -29,6 +29,34 @@ describe('Calculator library', () => {
     expect(() => compute('div', 1, 0)).toThrow('Division by zero');
   });
 
+  test('modulo: 10 % 3 = 1', () => {
+    expect(compute('%', 10, 3)).toBe(1);
+    expect(compute('mod', 10, 3)).toBe(1);
+    expect(modulo(10,3)).toBe(1);
+  });
+
+  test('modulo by zero throws', () => {
+    expect(() => compute('%', 1, 0)).toThrow('Modulo by zero');
+    expect(() => modulo(1,0)).toThrow('Modulo by zero');
+  });
+
+  test('power: 2 ^ 8 = 256', () => {
+    expect(compute('pow', 2, 8)).toBe(256);
+    expect(compute('^', 2, 8)).toBe(256);
+    expect(compute('**', 2, 8)).toBe(256);
+    expect(power(2,8)).toBe(256);
+  });
+
+  test('square root: sqrt(16) = 4', () => {
+    expect(compute('sqrt', 16)).toBe(4);
+    expect(squareRoot(16)).toBe(4);
+  });
+
+  test('square root of negative throws', () => {
+    expect(() => compute('sqrt', -4)).toThrow('Square root of negative number');
+    expect(() => squareRoot(-9)).toThrow('Square root of negative number');
+  });
+
   test('isNumber validation', () => {
     expect(isNumber('3')).toBe(true);
     expect(isNumber(4)).toBe(true);
@@ -37,6 +65,6 @@ describe('Calculator library', () => {
   });
 
   test('unknown operation throws', () => {
-    expect(() => compute('pow', 2, 3)).toThrow('Unknown operation');
+    expect(() => compute('pow2', 2, 3)).toThrow('Unknown operation');
   });
 });

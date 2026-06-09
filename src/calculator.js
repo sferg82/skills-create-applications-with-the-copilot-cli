@@ -1,62 +1,66 @@
 #!/usr/bin/env node
 
 // Node.js CLI Calculator
-// Supported operations: addition (+), subtraction (-), multiplication (*), division (/)
+// Supported operations: addition (+), subtraction (-), multiplication (*), division (/), modulo (%), power (pow, ^, **), square root (sqrt)
 // This implementation follows the instructions in the latest issue:
-// https://github.com/sferg82/skills-create-applications-with-the-copilot-cli/issues/3
+// https://github.com/sferg82/skills-create-applications-with-the-copilot-cli/issues/4
 
-const [,, opOrFlag, aStr, bStr] = process.argv;
+const { isNumber, compute } = require('./calculator-lib');
+
+const args = process.argv.slice(2);
 const usage = `Usage:
-  node src/calculator.js <operation> <num1> <num2>
+  node src/calculator.js <operation> <num1> <num2?>
 Operations:
   add | +        addition
   sub | -        subtraction
   mul | *        multiplication
   div | /        division
+  mod | %        modulo
+  pow | ^ | **   exponentiation
+  sqrt           square root (unary)
 Examples:
   node src/calculator.js add 2 3
   node src/calculator.js + 4 5
+  node src/calculator.js mod 10 3
+  node src/calculator.js pow 2 8
+  node src/calculator.js sqrt 16
 `;
 
-function isNumber(s) {
-  return !Number.isNaN(Number(s));
-}
-
-function compute(op, a, b) {
-  switch (op) {
-    case 'add':
-    case '+':
-      return a + b;
-    case 'sub':
-    case '-':
-      return a - b;
-    case 'mul':
-    case '*':
-      return a * b;
-    case 'div':
-    case '/':
-      if (b === 0) throw new Error('Division by zero');
-      return a / b;
-    default:
-      throw new Error('Unknown operation');
-  }
-}
-
-// If no args provided, print help
-if (!opOrFlag) {
+if (args.length === 0) {
   console.log(usage);
   process.exit(0);
 }
 
-// Support a flag-like interface: --add 2 3 or positional: add 2 3
-let op = opOrFlag;
-let n1 = aStr;
-let n2 = bStr;
-
-// allow flags like --add
-if (opOrFlag && opOrFlag.startsWith('--')) {
-  op = opOrFlag.slice(2);
+let op = args[0];
+if (op && op.startsWith('--')) {
+  op = op.slice(2);
 }
+
+if (op === 'sqrt') {
+  const nStr = args[1];
+  if (!nStr) {
+    console.error('Error: one numeric argument is required for sqrt.');
+    console.log(usage);
+    process.exit(1);
+  }
+  if (!isNumber(nStr)) {
+    console.error('Error: argument must be a number.');
+    process.exit(1);
+  }
+  const n = Number(nStr);
+  try {
+    const result = compute('sqrt', n);
+    console.log(result);
+  } catch (err) {
+    console.error('Error:', err.message);
+    process.exit(1);
+  }
+  process.exit(0);
+}
+
+// binary operations
+const n1 = args[1];
+const n2 = args[2];
 
 if (!n1 || !n2) {
   console.error('Error: two numeric arguments are required.');
