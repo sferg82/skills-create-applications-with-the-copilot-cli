@@ -35,6 +35,12 @@ describe('Calculator library', () => {
     expect(modulo(10,3)).toBe(1);
   });
 
+  test('modulo: 5 % 2 = 1 (image example)', () => {
+    expect(compute('%', 5, 2)).toBe(1);
+    expect(compute('mod', 5, 2)).toBe(1);
+    expect(modulo(5,2)).toBe(1);
+  });
+
   test('modulo by zero throws', () => {
     expect(() => compute('%', 1, 0)).toThrow('Modulo by zero');
     expect(() => modulo(1,0)).toThrow('Modulo by zero');
@@ -47,9 +53,19 @@ describe('Calculator library', () => {
     expect(power(2,8)).toBe(256);
   });
 
+  test('power: 2 ^ 3 = 8 (image example)', () => {
+    expect(compute('pow', 2, 3)).toBe(8);
+    expect(compute('^', 2, 3)).toBe(8);
+    expect(power(2,3)).toBe(8);
+  });
+
   test('square root: sqrt(16) = 4', () => {
     expect(compute('sqrt', 16)).toBe(4);
     expect(squareRoot(16)).toBe(4);
+  });
+
+  test('square root with symbol example (√16) => 4', () => {
+    expect(compute('sqrt', 16)).toBe(4);
   });
 
   test('square root of negative throws', () => {
